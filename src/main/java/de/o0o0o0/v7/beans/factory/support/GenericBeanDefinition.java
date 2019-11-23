@@ -1,6 +1,10 @@
 package de.o0o0o0.v7.beans.factory.support;
 
 import de.o0o0o0.v7.beans.BeanDefinition;
+import de.o0o0o0.v7.beans.PropertyValue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GenericBeanDefinition implements BeanDefinition {
 
@@ -9,6 +13,7 @@ public class GenericBeanDefinition implements BeanDefinition {
     private boolean singleton = true;
     private boolean prototype = false;
     private String scope = SCOPE_DEFAULT;
+    List<PropertyValue> propertyValues = new ArrayList<>();
 
     public GenericBeanDefinition(String id, String beanClassName) {
         this.id = id;
@@ -39,5 +44,10 @@ public class GenericBeanDefinition implements BeanDefinition {
     @Override
     public String getScope() {
         return this.scope;
+    }
+
+    @Override
+    public List<PropertyValue> getPropertyValues() {
+        return this.propertyValues;
     }
 }

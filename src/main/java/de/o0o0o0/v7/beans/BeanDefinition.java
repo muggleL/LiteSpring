@@ -1,5 +1,7 @@
 package de.o0o0o0.v7.beans;
 
+import java.util.List;
+
 public interface BeanDefinition {
     String SCOPE_SINGLETON = "singleton";
     String SCOPE_DEFAULT = "";
@@ -14,4 +16,6 @@ public interface BeanDefinition {
     void setScope(String scope);
 
     String getScope();
+
+    List<PropertyValue> getPropertyValues();
 }

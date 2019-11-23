@@ -1,8 +1,10 @@
 package de.o0o0o0.v2.test;
 
 import de.o0o0o0.v7.beans.BeanDefinition;
+import de.o0o0o0.v7.beans.PropertyValue;
 import de.o0o0o0.v7.beans.factory.xml.XmlBeanDefinitionReader;
 import de.o0o0o0.v7.beans.factory.support.DefaultBeanFactory;
+import de.o0o0o0.v7.config.RuntimeBeanReference;
 import de.o0o0o0.v7.core.io.ClassPathResource;
 import org.junit.Assert;
 import org.junit.Test;
