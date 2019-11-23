@@ -4,6 +4,10 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd ">
 
-    <bean id="petStore" class="de.o0o0o0.v1.service.PetStoreService"/>
-    <bean id="invalidBean" class="cccc"/>
+    <bean id="petStore" class="de.o0o0o0.v2.service.PetStoreService">
+        <property name="accountDao" ref="accountDao"/>
+        <property name="itemDao" ref="itemDao"/>
+    </bean>
+    <bean id="accountDao" class="de.o0o0o0.v2.dao.AccountDao"/>
+    <bean id="itemDao" class="de.o0o0o0.v2.dao.ItemDao"/>
 </beans>

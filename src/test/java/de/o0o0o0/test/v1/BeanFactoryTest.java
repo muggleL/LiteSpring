@@ -5,7 +5,7 @@ import de.o0o0o0.v1.beans.factory.BeanCreationException;
 import de.o0o0o0.v1.beans.factory.BeanDefinitionStoreException;
 import de.o0o0o0.v1.beans.factory.BeanFactory;
 import de.o0o0o0.v1.beans.factory.support.DefaultBeanFactory;
-import de.o0o0o0.service.v1.PetStoreService;
+import de.o0o0o0.v1.service.PetStoreService;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -19,7 +19,7 @@ public class BeanFactoryTest {
         // 获取 bean
         BeanDefinition bd = factory.getBeanDefinition("petStore");
         // 判断 bean 名称
-        assertEquals("de.o0o0o0.service.v1.PetStoreService", bd.getBeanClassName());
+        assertEquals("de.o0o0o0.v1.service.PetStoreService", bd.getBeanClassName());
         // 返回 service 实例
         PetStoreService service = (PetStoreService) factory.getBean("petStore");
         // 判断 service 不为空

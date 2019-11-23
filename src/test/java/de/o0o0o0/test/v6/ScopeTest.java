@@ -1,6 +1,6 @@
 package de.o0o0o0.test.v6;
 
-import de.o0o0o0.service.v1.PetStoreService;
+import de.o0o0o0.v1.service.PetStoreService;
 import de.o0o0o0.v6.beans.BeanDefinition;
 import de.o0o0o0.v6.beans.factory.support.DefaultBeanFactory;
 import de.o0o0o0.v6.beans.factory.xml.XmlBeanDefinitionReader;
@@ -26,7 +26,7 @@ public class ScopeTest {
         Assert.assertTrue(bd.isSingleton());
         Assert.assertFalse(bd.isPrototype());
         Assert.assertEquals(SCOPE_DEFAULT, bd.getScope());
-        Assert.assertEquals("de.o0o0o0.service.v1.PetStoreService", bd.getBeanClassName());
+        Assert.assertEquals("de.o0o0o0.v1.service.PetStoreService", bd.getBeanClassName());
         PetStoreService service = (PetStoreService) factory.getBean("petStore");
         Assert.assertNotNull(service);
         PetStoreService service1 = (PetStoreService) factory.getBean("petStore");
