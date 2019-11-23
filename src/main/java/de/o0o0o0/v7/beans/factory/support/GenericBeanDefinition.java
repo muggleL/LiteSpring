@@ -13,7 +13,7 @@ public class GenericBeanDefinition implements BeanDefinition {
     private boolean singleton = true;
     private boolean prototype = false;
     private String scope = SCOPE_DEFAULT;
-    List<PropertyValue> propertyValues = new ArrayList<>();
+    private List<PropertyValue> propertyValues = new ArrayList<>();
 
     public GenericBeanDefinition(String id, String beanClassName) {
         this.id = id;
