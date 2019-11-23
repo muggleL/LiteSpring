@@ -16,5 +16,6 @@ public class ApplicationTest {
         Assert.assertNotNull(storeService.getAccountDao());
         Assert.assertNotNull(storeService.getItemDao());
         Assert.assertEquals("alibaba", storeService.getOwner());
+        Assert.assertEquals(7, storeService.getVersion());
     }
 }
