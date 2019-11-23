@@ -8,6 +8,7 @@
         <property name="accountDao" ref="accountDao"/>
         <property name="itemDao" ref="itemDao"/>
         <property name="owner" value="alibaba"/>
+        <property name="version" value="7"/>
     </bean>
     <bean id="accountDao" class="de.o0o0o0.v2.dao.AccountDao"/>
     <bean id="itemDao" class="de.o0o0o0.v2.dao.ItemDao"/>
