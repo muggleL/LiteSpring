@@ -1,6 +1,6 @@
 package de.o0o0o0.test.v4;
 
-import de.o0o0o0.service.v1.PetStoreService;
+import de.o0o0o0.v1.service.PetStoreService;
 import de.o0o0o0.v4.context.ApplicationContext;
 import de.o0o0o0.v4.context.support.ClassPathXmlApplicationContext;
 import de.o0o0o0.v4.context.support.FileSystemXmlApplicationContext;
