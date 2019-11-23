@@ -1,8 +1,8 @@
 package de.o0o0o0.v2.test;
 
 import de.o0o0o0.v2.service.PetStoreService;
-import de.o0o0o0.v4.context.ApplicationContext;
-import de.o0o0o0.v4.context.support.ClassPathXmlApplicationContext;
+import de.o0o0o0.v7.context.ApplicationContext;
+import de.o0o0o0.v7.context.support.ClassPathXmlApplicationContext;
 import org.junit.Assert;
 import org.junit.Test;
 
