@@ -42,7 +42,7 @@ BeanDefinition bd = this.getBeanDefinition(beanID);
 
 ##  V2 代码重构 符合单一职责原则
 
-![截屏2019-11-22下午6.56.42](/Users/d.glua/IdeaProjects/liteSpring/images/截屏2019-11-22下午6.56.42.png)
+![截屏2019-11-22下午6.56.42](images/截屏2019-11-22下午6.56.42.png)
 
 `DefaultBeanFactory` 实现了 `BeanDefinitionRegister` 与 `BeanDefinitionRegister`
 
@@ -69,7 +69,7 @@ BeanDefinition bd = this.getBeanDefinition(beanID);
 
 ##  V3 实现 ClassPathXmlApplicationContext
 
-![截屏2019-11-22下午7.07.02](/Users/d.glua/IdeaProjects/liteSpring/images/截屏2019-11-22下午7.07.02.png)
+![截屏2019-11-22下午7.07.02](images/截屏2019-11-22下午7.07.02.png)
 
 V3 在 v2 的基础上 增加 `context` 包 `ApplicationContext` 继承了 `BeanFactory` 接口(拥有 getBean 方法)
 
@@ -110,7 +110,7 @@ public class ClassPathXmlApplicationContext implements ApplicationContext {
 
 ## V4 实现不同的文件读取方法
 
-![截屏2019-11-22下午7.54.41](/Users/d.glua/IdeaProjects/liteSpring/images/截屏2019-11-22下午7.54.41.png)
+![截屏2019-11-22下午7.54.41](images/截屏2019-11-22下午7.54.41.png)
 
 增加了用于读取文件的 `Resource` 接口 放在 `core.io` 包下 
 
@@ -321,7 +321,7 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
 
 前几个版本中 classLoader 都是由 ClassUtils 中写死的 ClassLoader 这样并不好
 
-![IMG_016890E577FA-1](/Users/d.glua/IdeaProjects/liteSpring/images/IMG_016890E577FA-1.jpeg)
+![IMG_016890E577FA-1](images/IMG_016890E577FA-1.jpeg)
 
 Spring 添加了一个 ConfigurableBeanFactory 接口使 factory 拥有可配置性
 
@@ -429,7 +429,7 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
 
 ```
 
-![截屏2019-11-22下午9.07.04](/Users/d.glua/IdeaProjects/liteSpring/images/截屏2019-11-22下午9.07.04.png)
+![截屏2019-11-22下午9.07.04](images/截屏2019-11-22下午9.07.04.png)
 
 ## 作用域
 
@@ -510,7 +510,7 @@ if(el.attribute(ATTRIBUTE_SCOPE) != null){
 
 ### #单例模式设计
 
-![IMG_D96642AD9E2A-1](/Users/d.glua/IdeaProjects/liteSpring/images/IMG_D96642AD9E2A-1.jpeg)
+![IMG_D96642AD9E2A-1](images/IMG_D96642AD9E2A-1.jpeg)
 
 通过 `SingletonBeanRegister `让 `DefaultBeanFactory` 有 实现 singleton 的能力
 
@@ -609,7 +609,215 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegister
 
 ## 整体类图
 
-![IMG_2BE24E3ED76E-1](/Users/d.glua/IdeaProjects/liteSpring/images/IMG_2BE24E3ED76E-1.jpeg)
+![IMG_2BE24E3ED76E-1](images/IMG_2BE24E3ED76E-1.jpeg)
 
-![IMG_D9CD5C494FDA-1](/Users/d.glua/IdeaProjects/liteSpring/images/IMG_D9CD5C494FDA-1.jpeg)
+![IMG_D9CD5C494FDA-1](images/IMG_D9CD5C494FDA-1.jpeg)
 
+## NO2 实现get set 注入
+
+新加依赖
+
+- log4j
+- commons-logging
+
+![IMG_7A575A18E446-1](images/IMG_7A575A18E446-1.jpeg)
+
+添加一个额外的类叫 PropertyValue 保存 需要注入的 property 信息
+
+整体类图
+
+![IMG_F80F0A6ED9D8-1](images/IMG_F80F0A6ED9D8-1.jpeg)
+
+
+
+
+
+
+
+类型转换
+
+![IMG_B59F1DFB7029-1](images/IMG_B59F1DFB7029-1.jpeg)
+
+![截屏2019-11-23下午4.18.06](images/截屏2019-11-23下午4.18.06.png)
+
+### #类作用说明
+
+- `PropertyValue` 主要有 `name` 、`value` 属性, 前者储存被注入的属性的名称，后者储存被注入的类的类型（`RuntimeBeanReference` 或者 `TypedStringValue`）
+
+  ```java
+  public class PropertyValue {
+      private final String name;
+      private final Object value;
+      private boolean converted = false;
+      private Object convertedValue;
+  
+      public PropertyValue(String name, Object value) {
+          this.name = name;
+          this.value = value;
+      }
+  
+      public String getName() {
+          return name;
+      }
+  
+      public Object getValue() {
+          return value;
+      }
+      public synchronized boolean isConverted() {
+          return this.converted;
+      }
+  
+      public synchronized Object getConvertedValue() {
+          return convertedValue;
+      }
+  
+      public synchronized void setConvertedValue(Object convertedValue) {
+          this.converted = true;
+          this.convertedValue = convertedValue;
+      }
+  }
+  
+  ```
+
+  
+
+- `RuntimeBeanReference` 、`TypedStringValue` 各有一个 `value` 属性，储存需要注入的属性的类名或值(`ref` 与 `value`)
+
+  ```java
+  public class RuntimeBeanReference {
+      private final String beanName;
+  
+      public RuntimeBeanReference(String beanName) {
+          this.beanName = beanName;
+      }
+  
+      public String getBeanName() {
+          return this.beanName;
+      }
+  }
+  ```
+
+- `BeanDefinitionValueResolver` 持有一个 `Factory` 根据 `PropertyValue` 储存的 `value` 属性 从 `factory` 取得类。
+
+  ```java
+  public class BeanDefinitionValueResolver {
+      private final DefaultBeanFactory factory;
+  
+      public BeanDefinitionValueResolver(DefaultBeanFactory factory) {
+          this.factory = factory;
+      }
+  
+      public Object resolveValueIfNecessary(Object value) {
+          if (value instanceof RuntimeBeanReference) {
+              String refName = ((RuntimeBeanReference) value).getBeanName();
+              return factory.getBean(refName);
+          } else if (value instanceof TypedStringValue) {
+              return ((TypedStringValue) value).getValue();
+          }
+          // TODO
+          throw new RuntimeException("the value " + value + " has not implemented");
+      }
+  }
+  ```
+
+  
+
+### #读取 property
+
+`BeanDefinition` 添加一个 `PropertyValue` map 用于储存 bean 的 set 注入参数
+
+```java
+    // 解析
+    private void parsePropertyElement(Element element, BeanDefinition definition) {
+        Iterator iterator = element.elementIterator(ELEMENT_PROPERTY);
+        while (iterator.hasNext()) {
+            Element ele = (Element) iterator.next();
+            String propertyName = ele.attributeValue(ATTRIBUTE_NAME);
+            if (!StringUtils.hasLength(propertyName)) {
+                logger.fatal("Tag 'properties' must have a 'name' attribute");
+                return;
+            }
+
+            Object val = parsePropertyValue(ele, definition, propertyName);
+            PropertyValue pv = new PropertyValue(propertyName, val);
+            definition.getPropertyValues().add(pv);
+        }
+    }
+
+    private Object parsePropertyValue(Element ele, BeanDefinition definition, String propertyName) {
+        String elementName = (propertyName != null) ?
+                "<property> element for property '" + propertyName + "'" :
+                "<constructor-arg> element";
+        boolean hasRefAttribute = ele.attribute(ATTRIBUTE_REF) != null;
+        boolean hasValueAttribute = ele.attribute(ATTRIBUTE_VALUE) != null;
+
+      // 引用类型
+        if (hasRefAttribute) {
+            String refName = ele.attributeValue(ATTRIBUTE_REF);
+            if (!StringUtils.hasText(refName)) {
+                logger.error(elementName + " contains empty 'ref' attribute");
+            }
+            return new RuntimeBeanReference(refName);
+          // 字符类型
+        } else if (hasValueAttribute) {
+            TypedStringValue value;
+            value = new TypedStringValue(ele.attributeValue(ATTRIBUTE_VALUE));
+            return value;
+        }else {
+            throw new RuntimeException(elementName + "must specify a ref or value");
+        }
+    }
+```
+
+### #注入 
+
+读取 `BeanDefinition` 的 `PropertyValueMap` 列表，调用 `BeanDefinitionValueResolver` 方法获取类的实体,然后用 JavaBean 的方法完成注入。
+
+```java
+private Object createBean(BeanDefinition bd) {
+        // 构建实例
+        Object bean = instantiateBean(bd);
+        // 设置属性
+        populateBean(bd, bean);
+        return bean;
+    }
+
+private void populateBean(BeanDefinition bd, Object bean) {
+        List<PropertyValue> values = bd.getPropertyValues();
+
+        if (values == null || values.isEmpty()) {
+            return;
+        }
+        BeanDefinitionValueResolver resolver = new BeanDefinitionValueResolver(this);
+        try {
+            for (PropertyValue value : values) {
+                String propertyName = value.getName();
+                Object originalValue = value.getValue();
+                Object resolverValue = resolver.resolveValueIfNecessary(originalValue);
+                // 调用bean 的set 方法注入参数
+                BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
+                PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
+                for (PropertyDescriptor descriptor : pds) {
+                    if (descriptor.getName().equals(propertyName)) {
+                        descriptor.getWriteMethod().invoke(bean, resolverValue);
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new BeanCreationException("failed to obtain BeanInfo from class [" + bd.getBeanClassName() + "]");
+
+        }
+    }
+
+private Object instantiateBean(BeanDefinition bd) {
+        ClassLoader cl = this.getBeanCLassLoader();
+        String beanClassName = bd.getBeanClassName();
+        try {
+            Class<?> clz = cl.loadClass(beanClassName);
+            return clz.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new BeanCreationException("Create Bean For Class '" + beanClassName + "' failed");
+        }
+    }
+```
