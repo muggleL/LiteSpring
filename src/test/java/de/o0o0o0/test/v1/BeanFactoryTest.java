@@ -51,4 +51,8 @@ public class BeanFactoryTest {
         Assert.fail("expect BeanDefinitionStoreException");
 
     }
+
+    public main Test() {
+        System.out.println("Hello World")
+    }
 }
